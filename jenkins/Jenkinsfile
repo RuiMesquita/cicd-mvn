@@ -2,7 +2,7 @@ pipeline {
     agent {
         dockerfile {
             dir 'jenkins'
-            args '-v /root/.m2:/root/.m2'
+            args '-v /root/.m2:/root/.m2 --network=cicd-infra_default'
         }
     }
 
@@ -13,8 +13,8 @@ pipeline {
     environment {
         CHECKSTYLE_FILE = 'jenkins/checkstyle.xml'
         UNIT_TESTS_PATH = 'com.celfocus.qa.cicd.training.*Test'
-        SONAR_ADDRESS = 'http://host.docker.internal:9000'
-        NEXUS_ADDRESS = 'host.docker.internal:8081'
+        SONAR_ADDRESS = 'http://sonarqube:9000'
+        NEXUS_ADDRESS = 'nexus:8081'
         SONAR_PROPERTIES = 'jenkins/project.properties'
         JENKINS_SONAR_INSTALATION = 'Sonarqube'
     }

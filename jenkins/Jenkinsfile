@@ -22,13 +22,13 @@ pipeline {
     stages {
         stage('Build and test') {
             steps {
-                sh "java -jar <INSERT_CHECKSTYLE_TOOL> -c ${CHECKSTYLE_FILE} src/main/**"
+                sh "java -jar /checkstyle/checkstyle.jar -c ${CHECKSTYLE_FILE} src/main/**"
 
                 sh "mvn clean test -Dtest='${UNIT_TESTS_PATH}'"
                 step([$class: 'JacocoPublisher', execPattern: 'target/jacoco.exec', exclusionPattern: '**/Main.class'])
 
                 withSonarQubeEnv("${JENKINS_SONAR_INSTALATION}") {
-                    sh "<INSERT_SONARQUBE_SCANNER> -Dsonar.host.url=${SONAR_ADDRESS} -Dproject.settings=${SONAR_PROPERTIES}"
+                    sh "sonar-scanner -Dsonar.host.url=${SONAR_ADDRESS} -Dproject.settings=${SONAR_PROPERTIES}"
                 }
                 timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
